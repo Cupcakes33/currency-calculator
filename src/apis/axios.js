@@ -8,9 +8,13 @@ const exchangeratesAxiosInstance = axios.create({
 
 export const exchangeAPI = {
   pair: async (base, target) => {
-    const { data } = await exchangeratesAxiosInstance.get(
-      `${EXCHANGERATES_API_KEY}/pair/${base}/${target}`
-    );
-    return data;
+    try {
+      const { data } = await exchangeratesAxiosInstance.get(
+        `${EXCHANGERATES_API_KEY}/pair/${base}/${target}`
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
   },
 };
