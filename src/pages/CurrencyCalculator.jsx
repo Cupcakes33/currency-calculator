@@ -1,14 +1,19 @@
-import { useEffect, useState } from "react";
-import { exchangeAPI } from "../apis/axios";
+import { useState } from "react";
+import useExchangeData from "../hooks/useExchangeData";
 
 const CurrencyCalculator = () => {
-  useEffect(() => {
-    (async () => {
-      const data = await exchangeAPI.pair("EUR", "GBP");
-      console.log(data);
-    })();
-  }, []);
-  return <div></div>;
+  const [base, setBase] = useState("EUR");
+  const [target, setTarget] = useState("GBP");
+
+  const exchangeData = useExchangeData(base, target);
+
+  return (
+    <div>
+      <input value={base} onChange={(e) => setBase(e.target.value)} />
+      <input value={target} onChange={(e) => setTarget(e.target.value)} />
+      {exchangeData ? <span>{exchangeData.conversion_rate}</span> : null}
+    </div>
+  );
 };
 
 export default CurrencyCalculator;
