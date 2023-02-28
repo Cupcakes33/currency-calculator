@@ -6,12 +6,7 @@ const CurrencyCalculator = () => {
   const [base, setBase] = useState("USD");
   const [target, setTarget] = useState("KRW");
   const [baseCurrency, setBaseCurrency] = useState(1);
-  // const [exchangeData, error] = useExchangeData(base, target);
-
-  const exchangeData = {
-    conversion_rate: 1000,
-    time_last_update_utc: "Mon, 27 Feb 2023 00:00:01 +0000",
-  };
+  const [exchangeData, error] = useExchangeData(base, target);
 
   const locailDate = (date) => {
     const options = {
@@ -32,19 +27,14 @@ const CurrencyCalculator = () => {
 
   return (
     <Container>
-      <CalculateResultsWrapper>
-        <p>{`${baseCurrency} ${base} = `}</p>
-        <h1>
-          {`${roundExchangeData(
-            baseCurrency,
-            exchangeData?.conversion_rate
-          )} ${target}`}
-        </h1>
+      <BaseExchangeRateWrapper>
+        <p>{`1 ${base} = `}</p>
+        <h1>{`${roundExchangeData(
+          1,
+          exchangeData?.conversion_rate
+        )} ${target}`}</h1>
         <p>{locailDate(exchangeData?.time_last_update_utc)}</p>
-      </CalculateResultsWrapper>
-
-      <img src={`https://flagsapi.com/BE/shiny/64.png`} alt="base flag" />
-      <img src={`https://flagsapi.com/BE/shiny/64.png`} alt="target flag" />
+      </BaseExchangeRateWrapper>
 
       <input value={base} onChange={(e) => setBase(e.target.value)} />
       <input value={target} onChange={(e) => setTarget(e.target.value)} />
@@ -54,15 +44,15 @@ const CurrencyCalculator = () => {
         onChange={(e) => setBaseCurrency(e.target.value)}
       />
 
-      {/* {exchangeData ? ( */}
-      <span>
-        {`${baseCurrency} ${base} = `}
-        {`${roundExchangeData(
-          baseCurrency,
-          exchangeData?.conversion_rate
-        )} ${target}`}
-      </span>
-      {/* ) : null} */}
+      {exchangeData ? (
+        <span>
+          {`${baseCurrency} ${base} = `}
+          {`${roundExchangeData(
+            baseCurrency,
+            exchangeData?.conversion_rate
+          )} ${target}`}
+        </span>
+      ) : null}
     </Container>
   );
 };
@@ -82,11 +72,14 @@ const Container = styled.div`
   }
 `;
 
-const CalculateResultsWrapper = styled.div`
+const BaseExchangeRateWrapper = styled.div`
   p {
     color: var(--grayscale);
-  }
 
+    &:last-child {
+      font-size: small;
+    }
+  }
   h1 {
     font-size: 40px;
   }
