@@ -7,14 +7,14 @@ const exchangeratesAxiosInstance = axios.create({
 });
 
 export const exchangeAPI = {
-  pair: async (base, target) => {
-    try {
-      const { data } = await exchangeratesAxiosInstance.get(
-        `${EXCHANGERATES_API_KEY}/pair/${base}/${target}`
-      );
+  get: async (base) => {
+    const { data } = await exchangeratesAxiosInstance.get(
+      `${EXCHANGERATES_API_KEY}/latest/${base}`
+    );
+    if (data.result === "success") {
       return data;
-    } catch (error) {
-      throw error;
+    } else {
+      throw new Error(data.result);
     }
   },
 };
