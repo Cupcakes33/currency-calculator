@@ -14,7 +14,14 @@ const CurrencyCalculator = () => {
   };
 
   const locailDate = (date) => {
-    return new Date(date).toLocaleString();
+    const options = {
+      timeZone: "UTC",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    };
+    return `${new Date(date).toLocaleString("ko-KR", options)} UTC`;
   };
 
   console.log(locailDate(exchangeData?.time_last_update_utc));
@@ -25,14 +32,17 @@ const CurrencyCalculator = () => {
 
   return (
     <Container>
-      <p>{`${baseCurrency} ${base} = `}</p>
-      <h3>
-        {`${roundExchangeData(
-          baseCurrency,
-          exchangeData?.conversion_rate
-        )} ${target}`}
-      </h3>
-      <p>{locailDate(exchangeData?.time_last_update_utc)}</p>
+      <CalculateResultsWrapper>
+        <p>{`${baseCurrency} ${base} = `}</p>
+        <h1>
+          {`${roundExchangeData(
+            baseCurrency,
+            exchangeData?.conversion_rate
+          )} ${target}`}
+        </h1>
+        <p>{locailDate(exchangeData?.time_last_update_utc)}</p>
+      </CalculateResultsWrapper>
+
       <img src={`https://flagsapi.com/BE/shiny/64.png`} alt="base flag" />
       <img src={`https://flagsapi.com/BE/shiny/64.png`} alt="target flag" />
 
@@ -43,12 +53,14 @@ const CurrencyCalculator = () => {
         defaultValue={baseCurrency}
         onChange={(e) => setBaseCurrency(e.target.value)}
       />
+
       {/* {exchangeData ? ( */}
       <span>
-        {baseCurrency}
-        {base} =
-        {Math.round(baseCurrency * exchangeData.conversion_rate * 1000) / 1000}
-        {target}
+        {`${baseCurrency} ${base} = `}
+        {`${roundExchangeData(
+          baseCurrency,
+          exchangeData?.conversion_rate
+        )} ${target}`}
       </span>
       {/* ) : null} */}
     </Container>
@@ -58,15 +70,24 @@ const CurrencyCalculator = () => {
 export default CurrencyCalculator;
 
 const Container = styled.div`
-  width: 300px;
-  height: 500px;
+  width: 400px;
+  height: 600px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   border-radius: 16px;
-  background: #efefef;
+  padding: 10px;
+  background: var(--white);
   img {
     width: 30px;
+  }
+`;
+
+const CalculateResultsWrapper = styled.div`
+  p {
+    color: var(--grayscale);
+  }
+
+  h1 {
+    font-size: 40px;
   }
 `;
