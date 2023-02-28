@@ -10,9 +10,9 @@ const CurrencyInput = ({ country, setCountry, value, setValue }) => {
         onChange={(e) => setValue(e.target.value)}
       />
       <select value={country} onChange={(e) => setCountry(e.target.value)}>
-        {Object.keys(COUNTRY_LIST).map((currency, n) => (
-          <option value={currency} key={`${currency}${n}`}>
-            {currency}
+        {Object.keys(COUNTRY_LIST).map((country, n) => (
+          <option value={country} key={`${country}${n}`}>
+            {country}
           </option>
         ))}
       </select>

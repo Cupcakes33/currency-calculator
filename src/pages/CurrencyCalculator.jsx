@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import useExchangeData from "../hooks/useExchangeData";
 import { COUNTRY_LIST } from "../data/country-list";
@@ -14,18 +14,11 @@ const CurrencyCalculator = () => {
     COUNTRY_LIST[target]
   );
 
-  useEffect(() => {
-    if (exchangeData) {
-      const roundValue = roundExchangeData(exchangeData.conversion_rate);
-      setTargetValue(roundValue);
-    }
-  }, [exchangeData]);
-
   const roundExchangeData = (exchange) => {
     return Math.round(exchange * 1000) / 1000;
   };
 
-  const locailDate = (date) => {
+  const locailDate = useCallback(() => {
     const options = {
       timeZone: "UTC",
       month: "long",
@@ -33,15 +26,18 @@ const CurrencyCalculator = () => {
       hour: "numeric",
       minute: "numeric",
     };
-    return `${new Date(date).toLocaleString("ko-KR", options)} UTC`;
-  };
+    return `${new Date(exchangeData?.time_last_update_utc).toLocaleString(
+      "ko-KR",
+      options
+    )} UTC`;
+  }, [exchangeData?.time_last_update_utc]);
 
   const baseValueChangeHandler = (baseValue) => {
     const roundValue = roundExchangeData(
       baseValue * exchangeData?.conversion_rate
     );
-    setTargetValue(roundValue);
     setBaseValue(baseValue);
+    setTargetValue(roundValue);
   };
 
   const targetValueChangeHandler = (targetValue) => {
@@ -52,6 +48,7 @@ const CurrencyCalculator = () => {
     setTargetValue(targetValue);
   };
 
+  
   return (
     <Container>
       <BaseExchangeRateWrapper>
@@ -59,7 +56,7 @@ const CurrencyCalculator = () => {
         <h1>{`${roundExchangeData(
           exchangeData?.conversion_rate
         )} ${target}`}</h1>
-        <p>{locailDate(exchangeData?.time_last_update_utc)}</p>
+        <p>{locailDate()}</p>
       </BaseExchangeRateWrapper>
 
       <CalculatorWrapper>

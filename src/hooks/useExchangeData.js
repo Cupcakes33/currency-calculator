@@ -7,14 +7,9 @@ const useExchangeData = (base, target) => {
 
   useEffect(() => {
     (async () => {
-      try {
-        const data = await exchangeAPI.pair(base, target);
-        setExchangeData(data);
-        setError(null);
-      } catch (error) {
-        setExchangeData(null);
-        setError(error);
-      }
+      const data = await exchangeAPI.pair(base, target);
+      setExchangeData(data);
+      setError(null);
     })();
   }, [base, target]);
 
