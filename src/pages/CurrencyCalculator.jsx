@@ -62,18 +62,20 @@ const CurrencyCalculator = () => {
         <p>{locailDate(exchangeData?.time_last_update_utc)}</p>
       </BaseExchangeRateWrapper>
 
-      <CurrencyInput
-        country={base}
-        setCountry={setBase}
-        value={baseValue}
-        setValue={baseValueChangeHandler}
-      />
-      <CurrencyInput
-        country={target}
-        setCountry={setTarget}
-        value={targetValue}
-        setValue={targetValueChangeHandler}
-      />
+      <CalculatorWrapper>
+        <CurrencyInput
+          country={base}
+          setCountry={setBase}
+          value={baseValue}
+          setValue={baseValueChangeHandler}
+        />
+        <CurrencyInput
+          country={target}
+          setCountry={setTarget}
+          value={targetValue}
+          setValue={targetValueChangeHandler}
+        />
+      </CalculatorWrapper>
     </Container>
   );
 };
@@ -81,8 +83,8 @@ const CurrencyCalculator = () => {
 export default CurrencyCalculator;
 
 const Container = styled.div`
-  width: 400px;
-  height: 600px;
+  width: 500px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   border-radius: 16px;
@@ -94,6 +96,7 @@ const Container = styled.div`
 `;
 
 const BaseExchangeRateWrapper = styled.div`
+  margin-bottom: 30px;
   p {
     color: var(--grayscale);
     &:last-child {
@@ -103,4 +106,10 @@ const BaseExchangeRateWrapper = styled.div`
   h1 {
     font-size: 40px;
   }
+`;
+
+const CalculatorWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
