@@ -39,8 +39,8 @@ const CurrencyCalculator = () => {
   };
 
   const targetValueChangeHandler = (targetValue) => {
+    setBaseValue(roundExchangeData(targetValue / conversionRate));
     setTargetValue(targetValue);
-    setBaseValue(roundExchangeData(conversionRate / targetValue));
   };
 
   return (

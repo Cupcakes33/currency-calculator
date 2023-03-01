@@ -2,11 +2,18 @@ import { COUNTRY_LIST } from "../data/country-list";
 import styled from "styled-components";
 
 const CurrencyInput = ({ country, setCountry, value, setValue }) => {
+  const currencyInputKeyDownNumberCheckHandler = (e) => {
+    if (!/[0-9]/.test(e.key) && e.keyCode !== 13 && e.keyCode !== 9) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <Container>
       <input
         type="text"
         value={value}
+        onKeyDown={currencyInputKeyDownNumberCheckHandler}
         onChange={(e) => setValue(e.target.value)}
       />
       <select value={country} onChange={(e) => setCountry(e.target.value)}>
