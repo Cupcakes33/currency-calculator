@@ -1,97 +1,65 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { COUNTRY_LIST } from "../data/country-list";
 import CurrencyInput from "../components/CurrencyInput";
 import { exchangeAPI } from "../apis/axios";
+import ExchangeRate from "../components/ExchangeRate";
 
 const CurrencyCalculator = () => {
   const [baseCurrency, setBaseCurrency] = useState("미국 달러");
   const [targetCurrency, setTargetCurrency] = useState("한국 원");
   const [baseValue, setBaseValue] = useState(1);
   const [targetValue, setTargetValue] = useState(1);
-  const [conversionRate, setConversionRate] = useState({});
+  const [conversionRate, setConversionRate] = useState(1);
   const [timeLastUpdated, setTimeLastUpdated] = useState("");
 
   useEffect(() => {
-    exchangeAPI.get(COUNTRY_LIST[baseCurrency]).then((res) => {
+    const base = COUNTRY_LIST[baseCurrency];
+    const target = COUNTRY_LIST[targetCurrency];
+    exchangeAPI.get(base, target).then((res) => {
       setTimeLastUpdated(res.time_last_update_utc);
-      setConversionRate(res.conversion_rates);
+      setConversionRate(res.conversion_rate);
     });
-  }, [baseCurrency]);
+  }, [baseCurrency, targetCurrency]);
 
+  useEffect(() => {
+    setTargetValue(roundExchangeData(baseValue * conversionRate));
+  }, [conversionRate]);
 
   const roundExchangeData = (exchange) => {
-    return Math.round(parseFloat(exchange) * 1000) / 1000;
+    return Math.floor(parseFloat(exchange) * 1000) / 1000;
   };
 
-  const locailDate = useCallback(() => {
-    const options = {
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    };
-    return `${new Date(timeLastUpdated).toLocaleString("ko-KR", options)} UTC`;
-  }, [timeLastUpdated]);
-
   const baseValueChangeHandler = (baseValue) => {
-    setTargetValue(
-      roundExchangeData(
-        (baseValue * conversionRate[COUNTRY_LIST[targetCurrency]]) /
-          conversionRate[COUNTRY_LIST[baseCurrency]]
-      )
-    );
+    setTargetValue(roundExchangeData(baseValue * conversionRate));
     setBaseValue(baseValue);
   };
 
-  const baseCountryChangeHandler = (baseCurrency) => {
-    setTargetValue(
-      roundExchangeData(
-        (baseValue * conversionRate[COUNTRY_LIST[targetCurrency]]) /
-          conversionRate[COUNTRY_LIST[baseCurrency]]
-      )
-    );
-    setBaseCurrency(baseCurrency);
-  };
-
   const targetValueChangeHandler = (targetValue) => {
-    setBaseValue(
-      roundExchangeData(
-        (targetValue * conversionRate[COUNTRY_LIST[baseCurrency]]) /
-          conversionRate[COUNTRY_LIST[targetCurrency]]
-      )
-    );
     setTargetValue(targetValue);
-  };
-
-  const targetCountryChangeHandler = (targetCurrency) => {
-    setTargetValue(
-      roundExchangeData(
-        (baseValue * conversionRate[COUNTRY_LIST[targetCurrency]]) /
-          conversionRate[COUNTRY_LIST[baseCurrency]]
-      )
-    );
-    setTargetCurrency(targetCurrency);
+    setBaseValue(roundExchangeData(targetValue * conversionRate));
   };
 
   return (
     <Container>
-      <BaseExchangeRateWrapper>
-        <p>{`${baseValue} ${baseCurrency} = `}</p>
-        <h1>{`${targetValue} ${targetCurrency}`}</h1>
-        <p>{locailDate()}</p>
-      </BaseExchangeRateWrapper>
+      <ExchangeRate
+        baseValue={baseValue}
+        baseCurrency={baseCurrency}
+        targetValue={targetValue}
+        targetCurrency={targetCurrency}
+        timeLastUpdated={timeLastUpdated}
+      />
 
       <CalculatorWrapper>
         <CurrencyInput
           country={baseCurrency}
-          setCountry={baseCountryChangeHandler}
+          setCountry={setBaseCurrency}
           value={baseValue}
           setValue={baseValueChangeHandler}
         />
         <CurrencyInput
           country={targetCurrency}
-          setCountry={targetCountryChangeHandler}
+          setCountry={setTargetCurrency}
           value={targetValue}
           setValue={targetValueChangeHandler}
         />
@@ -111,19 +79,6 @@ const Container = styled.div`
   background: var(--white);
   img {
     width: 30px;
-  }
-`;
-
-const BaseExchangeRateWrapper = styled.div`
-  margin-bottom: 30px;
-  p {
-    color: var(--grayscale);
-    &:last-child {
-      font-size: small;
-    }
-  }
-  h1 {
-    font-size: 35px;
   }
 `;
 
