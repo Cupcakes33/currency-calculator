@@ -12,13 +12,16 @@ const CurrencyCalculator = () => {
   const [targetValue, setTargetValue] = useState(1);
   const [conversionRate, setConversionRate] = useState(1);
   const [timeLastUpdated, setTimeLastUpdated] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const base = COUNTRY_LIST[baseCurrency];
     const target = COUNTRY_LIST[targetCurrency];
+    setIsLoading(true);
     exchangeAPI.get(base, target).then((res) => {
       setTimeLastUpdated(res.time_last_update_utc);
       setConversionRate(res.conversion_rate);
+      setIsLoading(false);
     });
   }, [baseCurrency, targetCurrency]);
 
@@ -37,12 +40,13 @@ const CurrencyCalculator = () => {
 
   const targetValueChangeHandler = (targetValue) => {
     setTargetValue(targetValue);
-    setBaseValue(roundExchangeData(targetValue * conversionRate));
+    setTargetValue(roundExchangeData(baseValue * conversionRate));
   };
 
   return (
     <Container>
       <ExchangeRate
+        isLoading={isLoading}
         baseValue={baseValue}
         baseCurrency={baseCurrency}
         targetValue={targetValue}

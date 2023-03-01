@@ -2,13 +2,13 @@ import { useCallback } from "react";
 import styled from "styled-components";
 
 const ExchangeRate = ({
+  isLoading,
   baseValue,
   baseCurrency,
   targetValue,
   targetCurrency,
   timeLastUpdated,
 }) => {
-  
   const locailDate = useCallback(() => {
     const options = {
       month: "long",
@@ -21,9 +21,20 @@ const ExchangeRate = ({
 
   return (
     <Container>
-      <p>{`${baseValue} ${baseCurrency} = `}</p>
-      <h1>{`${targetValue} ${targetCurrency}`}</h1>
-      <p>{locailDate()}</p>
+      <>
+        {isLoading ? (
+          <>
+            <p>Loading...</p>
+            <h1>Loading...</h1>
+          </>
+        ) : (
+          <>
+            <p>{`${baseValue} ${baseCurrency} = `}</p>
+            <h1>{`${targetValue} ${targetCurrency}`}</h1>
+          </>
+        )}
+        <p>{locailDate()}</p>
+      </>
     </Container>
   );
 };
