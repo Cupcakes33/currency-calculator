@@ -33,7 +33,7 @@ const ExchangeRate = ({
             <h1>{`${targetValue} ${targetCurrency}`}</h1>
           </>
         )}
-        <p>{locailDate()}</p>
+        <p>{timeLastUpdated ? locailDate() : "Loading..."}</p>
       </>
     </Container>
   );

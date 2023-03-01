@@ -3,7 +3,13 @@ import styled from "styled-components";
 
 const CurrencyInput = ({ country, setCountry, value, setValue }) => {
   const currencyInputKeyDownHandler = (e) => {
-    if (!/[0-9]/.test(e.key) && e.key !== "Tab" && e.key !== "Enter") {
+    if (
+      !/[0-9]/.test(e.key) &&
+      e.key !== "Tab" &&
+      e.key !== "Enter" &&
+      e.key !== "Backspace" &&
+      e.key !== "."
+    ) {
       e.preventDefault();
     }
   };
