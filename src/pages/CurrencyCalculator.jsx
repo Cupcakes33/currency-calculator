@@ -19,8 +19,9 @@ const CurrencyCalculator = () => {
     });
   }, [baseCurrency]);
 
+
   const roundExchangeData = (exchange) => {
-    return Math.round(exchange * 1000) / 1000;
+    return Math.round(parseFloat(exchange) * 1000) / 1000;
   };
 
   const locailDate = useCallback(() => {
@@ -64,10 +65,10 @@ const CurrencyCalculator = () => {
   };
 
   const targetCountryChangeHandler = (targetCurrency) => {
-    setBaseValue(
+    setTargetValue(
       roundExchangeData(
-        (targetValue * conversionRate[COUNTRY_LIST[baseCurrency]]) /
-          conversionRate[COUNTRY_LIST[targetCurrency]]
+        (baseValue * conversionRate[COUNTRY_LIST[targetCurrency]]) /
+          conversionRate[COUNTRY_LIST[baseCurrency]]
       )
     );
     setTargetCurrency(targetCurrency);
@@ -76,10 +77,8 @@ const CurrencyCalculator = () => {
   return (
     <Container>
       <BaseExchangeRateWrapper>
-        <p>{`1 ${baseCurrency} = `}</p>
-        <h1>{`${roundExchangeData(
-          conversionRate[COUNTRY_LIST[targetCurrency]]
-        )} ${targetCurrency}`}</h1>
+        <p>{`${baseValue} ${baseCurrency} = `}</p>
+        <h1>{`${targetValue} ${targetCurrency}`}</h1>
         <p>{locailDate()}</p>
       </BaseExchangeRateWrapper>
 
