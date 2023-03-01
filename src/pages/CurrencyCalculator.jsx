@@ -40,7 +40,7 @@ const CurrencyCalculator = () => {
 
   const targetValueChangeHandler = (targetValue) => {
     setTargetValue(targetValue);
-    setTargetValue(roundExchangeData(baseValue * conversionRate));
+    setBaseValue(roundExchangeData(conversionRate / targetValue));
   };
 
   return (
